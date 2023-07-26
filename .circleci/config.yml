@@ -1,0 +1,59 @@
+version: 2.1
+
+# Define custom jobs for this config
+# See: https://circleci.com/docs/jobs-steps/
+jobs:
+  create-test-data:
+      # For running on CircleCI's self-hosted runners
+    machine: true
+    resource_class: bgmorton/runner-test # Update this to reflect your self-hosted runner resource class details
+    steps:
+      - checkout # Check out the code in the project directory
+      - run:
+          # Create a file with some known example text in it - in this case the string 'abc123'
+          command: |
+            cat \<<- EOF > test_data.txt
+            abc123
+            EOF
+          name: Create test_data.txt
+      - persist_to_workspace:
+          # Workspaces let you persist data between jobs - saving time on re-downloading or recreating assets https://circleci.com/docs/workspaces/
+          # Must be an absolute path or relative path from working_directory. This is a directory on the container that is
+          # taken to be the root directory of the workspace.
+          root: .
+          # Must be relative path from root
+          paths:
+            - test_data.txt
+  check-test-data:
+    docker:
+      - image: cimg/python:3.11.4
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: .
+      - run:
+          # Check that the file created in the previous step exists and contains the expected text
+          # Be verbose! The output will appear in CircleCI, so it's useful to know what's going on
+          command: |
+            if [ -f test_data.txt ]; then
+              if grep -q abc123 test_data.txt; then
+                echo "Test data file exists and contains expected text"
+              else
+                echo "Test data file exists but does not contain expected text"
+                exit 1
+              fi
+            else
+              echo "Test data file does not exist"
+              exit 1
+            fi
+          name: Check test_data.txt
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/workflows/
+workflows:
+  build-deploy:
+    jobs:
+      - create-data
+      - check-data:
+          requires: 
+            - create-data
