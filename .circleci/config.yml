@@ -51,9 +51,9 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/workflows/
 workflows:
-  build-deploy:
+  test-workspace:
     jobs:
-      - create-data
-      - check-data:
+      - create-test-data
+      - check-test-data:
           requires: 
-            - create-data
+            - create-test-data
