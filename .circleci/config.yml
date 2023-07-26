@@ -40,7 +40,7 @@ jobs:
           # Be verbose! The output will appear in CircleCI, so it's useful to know what's going on
           command: |
             if [ -f test_data.txt ]; then
-              if grep -q foobar test_data.txt; then
+              if grep -q abc123 test_data.txt; then
                 echo "Test data file exists and contains expected text"
               else
                 echo "Test data file exists but does not contain expected text"
