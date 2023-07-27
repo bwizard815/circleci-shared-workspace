@@ -17,19 +17,19 @@ jobs:
             EOF
           name: Create test_data.txt
       - persist_to_workspace:
-          # Workspaces let you persist data between jobs - saving time on re-downloading or recreating assets https://circleci.com/docs/workspaces/
-          # Must be an absolute path or relative path from working_directory. This is a directory on the container that is
-          # taken to be the root directory of the workspace.
+          # Workspaces let you persist data between jobs - https://circleci.com/docs/workspaces/
+          # Must be an absolute path or relative path from working_directory. This is a directory on the container that is taken to be the root directory of the workspace.
+          # In this example, the workspace root is the working directory (.)
           root: .
-          # Must be relative path from root
           paths:
             - test_data.txt
   check-test-data:
     docker:
-      - image: cimg/python:3.11.4
+      - image: cimg/python:3.11.4 # Note that we don't use Python in this example, but we need to specify an image to run the job in
     steps:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
+          # In this example, the workspace root is the working directory (.)
           at: .
       - run: 
           # List the contents of the workspace directory
