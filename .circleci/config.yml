@@ -6,7 +6,7 @@ jobs:
   create-test-data:
       # For running on CircleCI's self-hosted runners
     machine: true
-    resource_class: RUNNER_NAMESPACE/RUNNER_RESOURCE_CLASS # Update this to reflect your self-hosted runner resource class details
+    resource_class: bwizard815/sample-project # Update this to reflect your self-hosted runner resource class details
     steps:
       - checkout # Check out the code in the project directory
       - run:
